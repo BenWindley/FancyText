@@ -26,11 +26,13 @@ public class Letter : MonoBehaviour
     public LetterAnimation m_disappearing;
 
     public float m_progress = 0.0f;
+    public float m_appearStagger = 0.1f;
 
     public State m_currentState;
     public State m_nextState;
 
     public TextMeshProUGUI m_text;
+    public Font m_font;
 
     private void Update()
     {
@@ -90,6 +92,6 @@ public class Letter : MonoBehaviour
 
     private void Remove()
     {
-
+        Destroy(gameObject);
     }
 }

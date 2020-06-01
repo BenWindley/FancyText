@@ -1,0 +1,11 @@
+<style 0>
+...
+<break>
+<style 1>
+Hello fancy text... 
+<style 2>
+BOO
+
+<style 0>
+I am very fancy.
+<break>
