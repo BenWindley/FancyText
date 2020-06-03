@@ -81,7 +81,7 @@ public class TextSort : MonoBehaviour
 
     private List<Letter> m_specialLetters = new List<Letter>();
 
-    public void OrderedSort(List<Letter> letters)
+    public List<GameObject> OrderedSort(List<Letter> letters)
     {
         m_specialLetters.Clear();
 
@@ -149,6 +149,15 @@ public class TextSort : MonoBehaviour
         paragraphs.Add(new Paragraph(words, letterHeightSpacing, heightSpacing, GetComponent<RectTransform>().sizeDelta.x, spaceWidth, transform));
 
         DestroySpecialCharacters();
+
+        List<GameObject> pObjects = new List<GameObject>();
+
+        foreach(Paragraph p in paragraphs)
+        {
+            pObjects.Add(p.m_paragraphObject);
+        }
+
+        return pObjects;
     }
 
     public void DestroySpecialCharacters()

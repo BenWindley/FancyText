@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class TextGenerator : MonoBehaviour
 {
+    private List<GameObject> m_paragraphs = new List<GameObject>();
+
     public void Generate(TextUnpacker.FancyTextBlock textBlock)
     {
         List<Letter> letters = new List<Letter>();
@@ -19,37 +21,70 @@ public class TextGenerator : MonoBehaviour
 
                 l.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = textExtract.m_text[i].ToString();
                 l.name = textExtract.m_text[i].ToString();
-                staggerCounter -= l.m_appearStagger;
-                l.m_progress = staggerCounter;
+                l.m_text.fontSize = textExtract.m_size;
+                l.m_audio = textExtract.m_audio;
+
+                if (textExtract.m_bold)
+                    l.m_text.fontStyle |= TMPro.FontStyles.Bold;
+                if (textExtract.m_italic)
+                    l.m_text.fontStyle |= TMPro.FontStyles.Italic;
+                if (textExtract.m_underlined)
+                    l.m_text.fontStyle |= TMPro.FontStyles.Underline;
+                if (textExtract.m_strikethrough)
+                    l.m_text.fontStyle |= TMPro.FontStyles.Strikethrough;
+
+                staggerCounter += l.m_appearStagger;
+                l.m_wait = staggerCounter;
 
                 letters.Add(l);
             }
         }
 
-        GetComponent<TextSort>().OrderedSort(letters);
+        m_paragraphs = GetComponent<TextSort>().OrderedSort(letters);
     }
 
-    public void RemoveLetters()
+    public bool LettersIdle()
     {
-        foreach(Letter l in GetComponentsInChildren<Letter>())
+        foreach (Letter l in GetComponentsInChildren<Letter>())
         {
-            l.m_nextState = Letter.State.Disappearing;
+            if (l.m_currentState != FancyTextAnimation.Type.Idle)
+                return false;
+        }
+
+        return true;
+    }
+
+    public void ForceStateLetters(FancyTextAnimation.Type state)
+    {
+        foreach (Letter l in GetComponentsInChildren<Letter>())
+        {
+            if (l.m_wait > 0)
+                l.m_progress = l.m_wait % 1.0f;
+            else
+                l.m_progress = 0.0f;
+
+            l.m_wait = 0.0f;
+            l.m_currentState = state;
         }
     }
 
-    public void RemoveChildren(bool destroyImmediate = true)
+    public void RemoveParagraphs()
     {
-        int children = transform.childCount;
+        foreach(GameObject p in m_paragraphs)
+            StartCoroutine(RemoveParagraph(p));
+    }
 
-        for(int i = 0; i < children; ++i)
+    private IEnumerator RemoveParagraph(GameObject paragraph)
+    {
+        bool lettersFaded = false;
+
+        while(!lettersFaded)
         {
-            GameObject g = transform.GetChild(0).gameObject;
-            g.transform.SetParent(null, false);
+            lettersFaded = (paragraph.GetComponentInChildren<Letter>() != null);
 
-            if (destroyImmediate)
-                DestroyImmediate(g);
-            else
-                Destroy(g);
-        } 
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        Destroy(paragraph);
     }
 }

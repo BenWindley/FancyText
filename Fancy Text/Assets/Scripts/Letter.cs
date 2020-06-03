@@ -1,93 +1,98 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using TMPro;
-
-[System.Serializable]
-public class LetterAnimation
-{
-    public AnimationCurve m_scale;
-    public AnimationCurve m_positionX;
-    public AnimationCurve m_positionY;
-    public AnimationCurve m_rotationZ;
-    public Gradient m_colour;
-}
 
 public class Letter : MonoBehaviour
 {
-    public enum State
-    {
-        None,
-        Appearing,
-        Idle,
-        Disappearing
-    }
-
-    public LetterAnimation m_appearing;
-    public LetterAnimation m_idle;
-    public LetterAnimation m_disappearing;
+    private List<FancyTextAnimation> m_enterAnimations = new List<FancyTextAnimation>();
+    private List<FancyTextAnimation> m_idleAnimations  = new List<FancyTextAnimation>();
+    private List<FancyTextAnimation> m_exitAnimations  = new List<FancyTextAnimation>();
 
     public float m_progress = 0.0f;
+    public float m_wait = 0.0f;
     public float m_appearStagger = 0.1f;
 
-    public State m_currentState;
-    public State m_nextState;
+    public FancyTextAnimation.Type m_currentState;
 
+    public Transform m_textTransform;
     public TextMeshProUGUI m_text;
     public Font m_font;
+    public string m_audio;
 
-    private void Update()
+    private void Start()
     {
+        foreach(FancyTextAnimation a in GetComponents<FancyTextAnimation>())
+        {
+            switch (a.m_animationType)
+            {
+                case FancyTextAnimation.Type.Enter:
+                    m_enterAnimations.Add(a);
+                    break;
+                case FancyTextAnimation.Type.Idle:
+                    m_idleAnimations.Add(a);
+                    break;
+                case FancyTextAnimation.Type.Exit:
+                    m_exitAnimations.Add(a);
+                    break;
+            }
+        }
+
+        foreach (FancyTextAnimation a in m_enterAnimations)
+        {
+            a.UpdateAnimation(0, m_textTransform, m_text);
+        }
+    }
+
+    private void LateUpdate()
+    {
+        if ((m_wait -= Time.deltaTime) > 0.0f)
+            return;
+
+        bool finishedState = true;
+        m_progress += Time.deltaTime;
+
         switch (m_currentState)
         {
-            case State.None:
-                m_currentState = m_nextState;
-                break;
-
-            case State.Appearing:
-                m_progress += Time.deltaTime;
-
-                UpdateLetter(m_appearing);
-
-                if (m_progress > 1.0f)
+            case FancyTextAnimation.Type.Enter:
+                foreach(FancyTextAnimation a in m_enterAnimations)
                 {
-                    m_currentState = m_nextState;
-                    m_progress -= 1.0f;
+                    finishedState &= a.UpdateAnimation(m_progress, m_textTransform, m_text);
+                }
+
+                if(finishedState)
+                {
+                    m_progress = 0.0f;
+                    FModUtility.PlayOneShot(m_audio);
+                    m_currentState = FancyTextAnimation.Type.Idle;
                 }
 
                 break;
-
-            case State.Idle:
-                m_progress += Time.deltaTime;
-
-                UpdateLetter(m_idle);
-
-                if (m_progress > 1.0f)
+            case FancyTextAnimation.Type.Idle:
+                foreach (FancyTextAnimation a in m_idleAnimations)
                 {
-                    m_currentState = m_nextState;
-                    m_progress -= 1.0f;
+                    finishedState &= a.UpdateAnimation(m_progress, m_textTransform, m_text);
+                }
+
+                if (finishedState)
+                {
+                    m_progress = 0.0f;
                 }
 
                 break;
+            case FancyTextAnimation.Type.Exit:
+                foreach (FancyTextAnimation a in m_exitAnimations)
+                {
+                    finishedState &= a.UpdateAnimation(m_progress, m_textTransform, m_text);
+                }
 
-            case State.Disappearing:
-                m_progress += Time.deltaTime;
-
-                UpdateLetter(m_disappearing);
-
-                if (m_progress > 1.0f)
+                if (finishedState)
                 {
                     Remove();
                 }
 
                 break;
         }
-    }
-
-    private void UpdateLetter(LetterAnimation animation)
-    {
-        m_text.transform.localPosition = new Vector2(animation.m_positionX.Evaluate(m_progress), animation.m_positionY.Evaluate(m_progress));
-        m_text.transform.localScale = Vector3.one * animation.m_scale.Evaluate(m_progress);
-        m_text.color = animation.m_colour.Evaluate(m_progress);
-        m_text.transform.rotation = Quaternion.Euler(0, 0, animation.m_rotationZ.Evaluate(m_progress));
     }
 
     private void Remove()

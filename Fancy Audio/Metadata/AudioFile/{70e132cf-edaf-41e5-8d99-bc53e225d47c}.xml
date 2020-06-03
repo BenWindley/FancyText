@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.00.00">
+	<object class="AudioFile" id="{70e132cf-edaf-41e5-8d99-bc53e225d47c}">
+		<property name="assetPath">
+			<value>Ice/IceBlocks_impact_shatter_bright_pieces_scatter_concrete_chunk_slide_ambiance.mp3</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>1</value>
+		</property>
+		<property name="length">
+			<value>1.5151020408163265</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{d713a362-45d4-4566-aea8-3fc9f972289c}</destination>
+		</relationship>
+	</object>
+</objects>

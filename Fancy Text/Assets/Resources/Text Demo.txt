@@ -1,11 +1,18 @@
-<style 0>
+<audio FemaleLight>
+<style Instant>
+<font 16>
 ...
 <break>
-<style 1>
-Hello fancy text... 
-<style 2>
-BOO
+Sed in congue nulla, quis elementum nulla. Nulla commodo, nisi sit amet aliquet porta, erat diam tincidunt nisi, vel sagittis ipsum mi ac ligula. 
 
-<style 0>
-I am very fancy.
+<style Shake>
+Nullam 
+<style Instant>
+consequat placerat cursus. 
+<break>
+<style Shake>
+<font 32>
+<bold on>
+<audio FemaleDeep>
+Cras non posuere nisl, [name] non efficitur est. 
 <break>

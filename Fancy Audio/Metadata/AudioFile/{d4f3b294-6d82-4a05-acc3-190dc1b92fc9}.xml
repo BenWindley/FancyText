@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.00.00">
+	<object class="AudioFile" id="{d4f3b294-6d82-4a05-acc3-190dc1b92fc9}">
+		<property name="assetPath">
+			<value>Ice/IceBlocks_impact_thud_quickbounce_hollow_tinypieces_scatter_slide_concrete.mp3</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>1</value>
+		</property>
+		<property name="length">
+			<value>1.3061224489795917</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{d713a362-45d4-4566-aea8-3fc9f972289c}</destination>
+		</relationship>
+	</object>
+</objects>

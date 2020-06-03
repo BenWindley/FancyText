@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.00.00">
+	<object class="AudioFile" id="{5c1d0b05-9ec2-4d84-925d-0fd92aac953a}">
+		<property name="assetPath">
+			<value>Lip Sound 04.mp3</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.2089795918367347</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{d713a362-45d4-4566-aea8-3fc9f972289c}</destination>
+		</relationship>
+	</object>
+</objects>
